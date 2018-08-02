@@ -45,7 +45,7 @@ void lcd_task(void * p_arg) {
       
     sprintf(p_str, "Company Name"); //test string
     GUIDEMO_API_writeLine(0u, p_str);
-    sprintf(p_str, "DEPTH: "); //test string
+    sprintf(p_str, "DEPTH: %4u", get_depth()); //test string
     GUIDEMO_API_writeLine(1u, p_str);
     sprintf(p_str, "RATE: "); //test string
     GUIDEMO_API_writeLine(2u, p_str);
