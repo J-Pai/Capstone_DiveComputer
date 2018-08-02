@@ -2018,7 +2018,19 @@
     </group>
   </group>
   <file>
+    <name>$PROJ_DIR$\..\diver.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\..\diver.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\gui-library.a</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\..\scuba.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\..\scuba.h</name>
   </file>
 </project>
 
