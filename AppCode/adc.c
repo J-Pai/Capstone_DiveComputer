@@ -144,7 +144,7 @@ void adc_task(void * p_arg)
 
     //Unneeded if implementation is as expected
     //Get Current Postion 
-    //depth=get_DEPTH();
+    depth=get_depth();
 
     //Unneeded if implementation is as expected
     //Get Current capacity ()
@@ -152,8 +152,8 @@ void adc_task(void * p_arg)
     
  
     if(depth == 0){
-      OSFlagPost(&g_surface,0x1u,OS_OPT_POST_FLAG_SET,&err);
-    
+      OSFlagPost(&g_surface,AT_SURFACE,OS_OPT_POST_FLAG_SET,&err);
+      my_assert(OS_ERR_NONE == err);
     } else {
       //Call scuba functions to get rate of gas consumption
       airRate=gas_rate_in_cl(depth);
