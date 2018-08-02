@@ -79,6 +79,10 @@
 #define  APP_CFG_DEBOUNCE_TASK_PRIO                   14u
 #define  APP_CFG_DEBOUNCE_TASK_STK_SIZE              192u
 
+// ------------ BUTTON DEBOUNCER REACT TASK PRIO & STK SIZE ------------
+#define  APP_CFG_DEBOUNCE_REACT_TASK_PRIO                   14u
+#define  APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE              192u
+
 // ------------ ADC TASK PRIO & STK SIZE ------------
 #define  APP_CFG_ADC_TASK_PRIO                   14u
 #define  APP_CFG_ADC_TASK_STK_SIZE              192u

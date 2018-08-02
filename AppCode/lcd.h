@@ -2,13 +2,13 @@
 *
 * @brief ADC Task interface
 */
-#ifndef _ADC_H
-#define _ADC_H
+#ifndef _LCD_H
+#define _LCD_H
 
 #define BIT(n) (1UL << (n))
 
 #define UNIT_M BIT(0UL);
-#define UNIT_F BIT(1UL);
+#define UNIT_FT BIT(1UL);
 
 #define AT_SURFACE BIT(0UL);
 
@@ -24,4 +24,4 @@ extern uint32_t get_air(void);
 extern uint32_t add_air(uint32_t addition);
 extern uint32_t sub_air(uint32_t subtraction);
 
-#endif /* _ADC_H */
+#endif /* _LCD_H */
