@@ -26,7 +26,7 @@ void toggle_unit_task(void * p_arg) {
       // get flag about current units
       
       uint32_t flag = (uint32_t)OSFlagPend(&g_unit, UNIT_M | UNIT_FT, 0,
-                          OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
+                          OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
                           NULL, &err);
       my_assert(OS_ERR_NONE == err);
       

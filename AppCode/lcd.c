@@ -47,7 +47,13 @@ void lcd_task(void * p_arg) {
     GUIDEMO_API_writeLine(0u, p_str);
     sprintf(p_str, "DEPTH: %4u", get_depth()); //test string
     GUIDEMO_API_writeLine(1u, p_str);
-    sprintf(p_str, "RATE: "); //test string
+    
+    uint32_t dir_flag = (uint32_t)OSFlagPend(&g_direction, 1, 0,
+                        OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
+                        NULL, &err);
+    my_assert(OS_ERR_NONE == err);
+    
+    sprintf(p_str, "RATE: %4u", dir_flag); //test string
     GUIDEMO_API_writeLine(2u, p_str);
     sprintf(p_str, "AIR: "); //test string
     GUIDEMO_API_writeLine(3u, p_str);

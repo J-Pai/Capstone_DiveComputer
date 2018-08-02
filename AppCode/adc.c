@@ -136,9 +136,9 @@ void adc_task(void * p_arg)
     diveRate = ADC2RATE((int32_t)adcVal);
    
     if (diveRate>=0) {
-      OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_SET,&err);
+      OSFlagPost(&g_direction, 0x1, OS_OPT_POST_FLAG_SET, &err);
     } else {
-      OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_CLR,&err);
+      OSFlagPost(&g_direction, 0x1, OS_OPT_POST_FLAG_CLR, &err);
     }
    
    

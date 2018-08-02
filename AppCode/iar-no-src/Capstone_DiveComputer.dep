@@ -1635,6 +1635,10 @@
           <file> 557</file>
         </tool>
         <tool>
+          <name>ICCARM</name>
+          <file> 260</file>
+        </tool>
+        <tool>
           <name>__cstat</name>
           <file> 472</file>
         </tool>
