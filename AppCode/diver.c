@@ -14,7 +14,6 @@
 #include "diver.h"
 #include "lcd.h"
 
-#define TASK_DIVER_STK_SIZE 192
 
 
 OS_TCB   diver_TCB;

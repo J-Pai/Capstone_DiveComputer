@@ -60,6 +60,7 @@
 #include  "adc.h"
 #include  "alarm.h"
 #include  "lcd.h"
+#include  "diver.h"
 
 static OS_MUTEX g_led_mutex;
 
@@ -252,6 +253,14 @@ static void startup_task(void * p_arg)
                  0, APP_CFG_ALARM_TASK_PRIO,
                  &alarm_task_Stk[0], (APP_CFG_ALARM_TASK_STK_SIZE / 10u),
                   APP_CFG_ALARM_TASK_STK_SIZE, 0u, 0u, 0,
+                  (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
+    my_assert(OS_ERR_NONE == err);
+    
+    //Diver Task
+      OSTaskCreate(&diver_TCB, "diver Task", (OS_TASK_PTR ) diver_task,
+                 0, APP_CFG_DIVER_TASK_PRIO ,
+                 &diver_Stk[0], (TASK_DIVER_STK_SIZE/ 10u),
+                  TASK_DIVER_STK_SIZE, 0u, 0u, 0,
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
 }
