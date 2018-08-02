@@ -1102,6 +1102,9 @@
       <name>$PROJ_DIR$\..\cpu_cfg.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\lcd.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\lib_cfg.h</name>
     </file>
     <file>
@@ -1118,6 +1121,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\pushbutton.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\scuba.c</name>
     </file>
   </group>
   <group>

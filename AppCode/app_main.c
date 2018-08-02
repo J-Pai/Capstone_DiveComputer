@@ -74,12 +74,6 @@ static CPU_STK led1_task_Stk[APP_CFG_LED_TASK_STK_SIZE];
 static OS_TCB debounce_task_TCB;
 static CPU_STK debounce_task_Stk[APP_CFG_DEBOUNCE_TASK_STK_SIZE];
 
-static OS_TCB debounce_react_task1_TCB;
-static CPU_STK debounce_react_task_Stk1[APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE];
-
-static OS_TCB debounce_react_task2_TCB;
-static CPU_STK debounce_react_task_Stk2[APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE];
-
 static OS_TCB adc_task_TCB;
 static CPU_STK adc_task_Stk[APP_CFG_ADC_TASK_STK_SIZE];
 
@@ -120,47 +114,6 @@ static void led1_task(void * p_arg)
         // TODO: Sleep for 500ms
         OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_STRICT, &err);
     }
-}
-
-// *****************************************************************
-//  Debounce reaction task
-// *****************************************************************
-static void debounce_react_task(void * p_arg) {
-  OS_ERR err;  
-  OS_SEM * sem = NULL;
-  
-  // Get which line to put count on.
-  uint32_t line = (uint32_t) p_arg;
-  char * name = "";
-  
-  // Use line to determine which switch we want to use
-  if (line == 0) {
-    // Use switch 1 semaphore
-    sem = &g_sw1_sem;
-    name = "SW1: %4u";
-
-  } else {
-    // Use switch 2 semaphore
-    sem = &g_sw2_sem;
-    name = "SW2: %4u";
-  }
-  
-  char p_str[16];
-  uint32_t count = 0;
-  sprintf(p_str, name, count);  
-  GUIDEMO_API_writeLine(line, p_str);
-
-  for (;;) {
-    OSSemPend(sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
-    my_assert(OS_ERR_NONE == err);
-    
-    count++;
-    
-    // Generate string
-    sprintf(p_str, name, count);
-    
-    GUIDEMO_API_writeLine(line, p_str);
-  }
 }
 
 // *****************************************************************
@@ -215,24 +168,8 @@ static void startup_task(void * p_arg)
     // TODO: Create task to do button debouncer
     OSTaskCreate(&debounce_task_TCB, "Debounce Task", (OS_TASK_PTR ) debounce_task,
                  0, APP_CFG_DEBOUNCE_TASK_PRIO,
-                 &debounce_react_task_Stk1[0], (APP_CFG_DEBOUNCE_TASK_STK_SIZE / 10u),
+                 &debounce_task_Stk[0], (APP_CFG_DEBOUNCE_TASK_STK_SIZE / 10u),
                   APP_CFG_DEBOUNCE_TASK_STK_SIZE, 0u, 0u, 0,
-                  (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
-    my_assert(OS_ERR_NONE == err);
-    
-    // Switch 1 Reaction Task
-    OSTaskCreate(&debounce_react_task1_TCB, "React SW1 Task", (OS_TASK_PTR ) debounce_react_task,
-                 0, APP_CFG_DEBOUNCE_REACT_TASK_PRIO,
-                 &debounce_react_task_Stk2[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
-                  APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE, 0u, 0u, 0,
-                  (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
-    my_assert(OS_ERR_NONE == err);
-    
-    // Switch 2 Reaction Task
-    OSTaskCreate(&debounce_react_task2_TCB, "React SW2 Task", (OS_TASK_PTR ) debounce_react_task,
-                 (void *) 1, APP_CFG_DEBOUNCE_REACT_TASK_PRIO,
-                 &debounce_task_Stk[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
-                  APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE, 0u, 0u, 0,
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
     
