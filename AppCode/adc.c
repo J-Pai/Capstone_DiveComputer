@@ -117,18 +117,20 @@ void adc_task(void * p_arg)
   pot_init();
   
   OS_MSG_SIZE size = 0;
-  uint32_t time = 0;
+  OS_TICK time = OSTimeGet(&err);
+  my_assert(OS_ERR_NONE == err);
+  
   uint32_t depth = 0;
   uint32_t prev_time = 0;
   
   int32_t diveRate,airRate;
-  prev_time= OS_TS_GET();//get_EDT();
-  
+  // prev_time= OS_TS_GET();//get_EDT();
+
   for(;;){
     OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_HMSM_STRICT, &err);
     my_assert(OS_ERR_NONE == err);
 
-        // Trigger ADC conversion.
+    // Trigger ADC conversion.
     pot_trigger_conversion();
     //Read ADC 
     uint32_t adcVal =(uint32_t)OSQPend(&g_adc_msg_queue, 0, OS_OPT_PEND_BLOCKING, &size, 0, &err);
@@ -147,10 +149,10 @@ void adc_task(void * p_arg)
       my_assert(OS_ERR_NONE == err);
     }
    
-   
     //Get Time
-    time=get_time();//get_EDT();
-
+    time = OSTimeGet(&err);
+    my_assert(OS_ERR_NONE == err);
+    
     //Unneeded if implementation is as expected
     //Get Current Postion 
     depth = get_depth();
@@ -169,9 +171,10 @@ void adc_task(void * p_arg)
       airRate = gas_rate_in_cl(depth);
       //Rate of Gas consumption * time from last //High Granularity Intergral Approximation 
       //Subtract change from capacity Assumes that function perfoms the addition
-      uint32_t air_cap = sub_air((uint32_t)airRate * (time-prev_time));
+      uint32_t air_cap = sub_air(((uint32_t)airRate * (time - prev_time)) / 500);
       //Using rate and Elapsed time from last call remove/add depth
-      depth = (diveRate >= 0) ? add_depth((uint32_t)diveRate*(time - prev_time)) : sub_depth((uint32_t)-diveRate*(time - prev_time));
+      depth = (diveRate >= 0) ? add_depth(((uint32_t)diveRate * (time - prev_time)) / 1000) : 
+                                sub_depth(((uint32_t)-diveRate * (time - prev_time)) / 1000);
       
       //Evaluate current Air Supply set flag accordingly 
       if(air_cap < (gas_to_surface_in_cl(depth)))        
@@ -184,7 +187,7 @@ void adc_task(void * p_arg)
         OSFlagPost(&g_alarm_flags, 0x4, OS_OPT_POST_FLAG_SET, &err);
     }
 
-    prev_time=time;
+    prev_time = time;
     
     
     
@@ -478,18 +481,18 @@ void ADC_IRQHandler(void)
   OSIntExit();
 
 }
-void m_time(void){
+void m_time(void * p_arg){
   OS_ERR err;
   
   OSMutexCreate(&g_time_mutex, "Protects Time Variable", &err);
   my_assert(OS_ERR_NONE == err);
   
   for(;;){
-    OSTimeDlyHMSM(0, 0, 1,0, OS_OPT_TIME_HMSM_STRICT, &err);
-   OSMutexPend(&g_time_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
+    OSTimeDlyHMSM(0, 0, 1,0, OS_OPT_TIME_HMSM_NON_STRICT, &err);
+    OSMutexPend(&g_time_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
     my_assert(OS_ERR_NONE == err);
-      ++g_time;
-   OSMutexPost(&g_time_mutex, OS_OPT_POST_NONE, &err);
+    ++g_time;
+    OSMutexPost(&g_time_mutex, OS_OPT_POST_NONE, &err);
   }
 }
 
