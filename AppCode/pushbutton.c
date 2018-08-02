@@ -181,7 +181,9 @@ void debounce_task_init(void)
 
   // TODO: Create the two semaphores for Switch 1 and Switch 2 here.
   OSSemCreate(&g_sw1_sem, "SW1 Sem", 0, &err);
+  my_assert(OS_ERR_NONE == err);
   OSSemCreate(&g_sw2_sem, "SW2 Sem", 0, &err);
+  my_assert(OS_ERR_NONE == err);
 }
 
 /*!
