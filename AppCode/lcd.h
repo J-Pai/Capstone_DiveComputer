@@ -5,10 +5,10 @@
 #ifndef _LCD_H
 #define _LCD_H
 
-#define BIT(n) (1UL << (n))
+#define BIT(n)          (1UL << (n))
 
-#define UNIT_M BIT(0UL);
-#define UNIT_FT BIT(1UL);
+#define UNIT_M          BIT(0UL)
+#define UNIT_FT         BIT(1UL)
 
 #define AT_SURFACE BIT(0UL);
 

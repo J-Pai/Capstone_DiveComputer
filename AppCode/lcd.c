@@ -10,6 +10,10 @@
 #include "project.h"
 #include "GUIDEMO_API.h"
 
+OS_FLAG_GRP g_unit;
+OS_FLAG_GRP g_direction;
+OS_FLAG_GRP g_surface;
+
 static uint32_t g_depth;
 static uint32_t g_air;
 

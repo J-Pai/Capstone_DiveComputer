@@ -133,8 +133,10 @@ static void toggle_unit_task(void * p_arg) {
       OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
       my_assert(OS_ERR_NONE == err);
       // get flag about current units
+      
       uint32_t flag = (uint32_t)OSFlagPend(&g_unit, UNIT_M | UNIT_FT, 0,
-        OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, NULL, &err);
+                          OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
+                          NULL, &err);
       my_assert(OS_ERR_NONE == err);
       
       if( flag == UNIT_M) {
@@ -177,7 +179,7 @@ static void startup_task(void * p_arg)
   my_assert(OS_ERR_NONE == err);
   
   // Create flag to determine units in (M or FT)
-  OSFlagCreate(&g_unit, "Unit Flag", UNIT_M, &err);
+  OSFlagCreate(&g_unit, "Unit Flag", 1, &err);
   my_assert(OS_ERR_NONE == err);
   
   #if OS_CFG_STAT_TASK_EN > 0u
