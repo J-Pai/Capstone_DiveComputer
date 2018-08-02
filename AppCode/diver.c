@@ -23,9 +23,11 @@ CPU_STK  diver_Stk[TASK_DIVER_STK_SIZE];
 
 void diver_task(void){
   OS_ERR err;
-  uint32_t size =0,time,depth,air_cap,prev_time,air_cap;
-  int32_t  adcVal=0,diveRate,airRate;
+  uint32_t size,time,depth,air_cap,prev_time;
   
+  
+  int32_t  adcVal=0,diveRate,airRate;
+  CPU_TS tick=5;
   prev_time= get_EDT();
   for(;;){
   //Read ADC 
@@ -46,7 +48,7 @@ void diver_task(void){
     
  
     if(depth=0){
-    if(OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 5, &err))
+    if(OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, &tick, &err))
       {
         if(get_AIR()+20<=MAX_AIR_IN_CL)
           air_cap=change_AIR(20);
