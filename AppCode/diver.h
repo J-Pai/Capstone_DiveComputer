@@ -1,4 +1,3 @@
-
 #ifndef _DIVER_H
 #define _DIVER_H
 
@@ -12,7 +11,4 @@ extern uint32_t currDepth;
 extern OS_TCB   diver_TCB;
 extern CPU_STK  diver_Stk[TASK_DIVER_STK_SIZE];
 
-
-
-
-#endif _DIVER_H
+#endif 

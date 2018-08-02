@@ -31,7 +31,6 @@ void diver_task(void){
   uint32_t size,time,depth,air_cap,prev_time,adcVal=0;
   
   int32_t diveRate,airRate;
-  CPU_TS tick=5;
   prev_time= OS_TS_GET();//get_EDT();
   
   for(;;){
@@ -52,7 +51,7 @@ void diver_task(void){
     //air_cap=get_AIR();
     
  
-    if(depth=0){
+    if(depth == 0){
       OSFlagPost(&g_surface,0x1u,OS_OPT_POST_FLAG_SET,&err);
     
     }else
