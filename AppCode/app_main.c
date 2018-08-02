@@ -95,6 +95,13 @@ static CPU_STK lcd_task_Stk[APP_CFG_LCD_TASK_STK_SIZE];
 static OS_TCB startup_task_TCB;
 static CPU_STK startup_task_Stk[APP_CFG_DEBOUNCE_TASK_STK_SIZE];
 
+static OS_TCB startup_task_TCB;
+static CPU_STK startup_task_Stk[APP_CFG_DEBOUNCE_TASK_STK_SIZE];
+
+static OS_TCB time_task_TCB;
+static CPU_STK time_Stk[APP_CFG_DEBOUNCE_TASK_STK_SIZE];
+
+
 // *****************************************************************
 // Flash LED1 at 3 Hz
 // *****************************************************************
@@ -234,6 +241,13 @@ static void startup_task(void * p_arg)
                  APP_CFG_LCD_TASK_STK_SIZE, 0u, 0u, 0,
                  (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
+    
+        OSTaskCreate(&time_task_TCB, "Startup Task", (OS_TASK_PTR ) m_time,
+             0, TIME_CFG_DIVER_TASK_PRIO,
+             &time_Stk[0], (TIME_DIVER_STK_SIZE/ 10u),
+             TIME_DIVER_STK_SIZE, 0u, 0u, 0,
+              (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
+    my_assert(OS_ERR_NONE == err);    
 }
 
 // *****************************************************************

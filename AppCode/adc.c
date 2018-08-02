@@ -67,6 +67,11 @@ typedef struct
   uint32_t CDR;    // Offset 0x08
 } ADC_COMMON_T;
 
+
+
+OS_MUTEX g_time_mutex;
+uint32_t g_time=0;
+
 // Step 2a: Declare a pointer to the ADC3 Register Struct
 // See processor Reference Manual:
 //     Section 2.2.2, "Memory Map and Register Boundary Addresses"
@@ -125,7 +130,7 @@ void adc_task(void * p_arg)
   prev_time= OS_TS_GET();//get_EDT();
   
   for(;;){
-    OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_HMSM_STRICT, &err);
+    OSTimeDlyHMSM(0, 0, 0,125, OS_OPT_TIME_HMSM_STRICT, &err);
     //my_assert(OS_ERR_NONE == err);
 
         // Trigger ADC conversion.
@@ -140,7 +145,7 @@ void adc_task(void * p_arg)
    
    
     //Get Time
-    time=OS_TS_GET();//get_EDT();
+    time=get_time();//get_EDT();
 
     //Unneeded if implementation is as expected
     //Get Current Postion 
@@ -154,7 +159,7 @@ void adc_task(void * p_arg)
     if(depth == 0){
       OSFlagPost(&g_surface,AT_SURFACE,OS_OPT_POST_FLAG_SET,&err);
       my_assert(OS_ERR_NONE == err);
-      depth=(diveRate>=0)? add_depth((uint32_t)diveRate*(time-prev_time)):0;
+      depth=(diveRate<=0)? add_depth((uint32_t)diveRate*(time-prev_time)):get_depth();
     } else {
       //Call scuba functions to get rate of gas consumption
       airRate=gas_rate_in_cl(depth);
@@ -162,7 +167,7 @@ void adc_task(void * p_arg)
       //Subtract change from capacity Assumes that function perfoms the addition
       air_cap=(airRate>=0)?add_air((uint32_t)airRate * (time-prev_time)):sub_air((uint32_t)-airRate * (time-prev_time));
       //Using rate and Elapsed time from last call remove/add depth
-      depth=(diveRate>=0)? add_depth((uint32_t)diveRate*(time-prev_time)):sub_depth((uint32_t)-diveRate*(time-prev_time));
+      depth=(diveRate<=0)? add_depth((uint32_t)diveRate*(time-prev_time)):sub_depth((uint32_t)-diveRate*(time-prev_time));
       
       //Evaluate current Air Supply set flag accordingly 
       if(air_cap<(gas_to_surface_in_cl(depth)))        
@@ -175,6 +180,10 @@ void adc_task(void * p_arg)
         OSFlagPost(&g_alarm_flags,0x4,OS_OPT_POST_FLAG_SET,&err);
     }
 
+    prev_time=time;
+    
+    
+    
     if (adcVal == 0) {
       OSFlagPost(&g_alarm_flags, ALARM_NONE, OS_OPT_POST_FLAG_SET, &err);
       my_assert(OS_ERR_NONE == err);
@@ -465,4 +474,31 @@ void ADC_IRQHandler(void)
   OSIntExit();
 
 }
+void m_time(void){
+  OS_ERR err;
+  
+  OSMutexCreate(&g_time_mutex, "Protects Time Variable", &err);
+  my_assert(OS_ERR_NONE == err);
+  
+  for(;;){
+    OSTimeDlyHMSM(0, 0, 1,0, OS_OPT_TIME_HMSM_STRICT, &err);
+   OSMutexPend(&g_time_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
+    my_assert(OS_ERR_NONE == err);
+      ++g_time;
+   OSMutexPost(&g_time_mutex, OS_OPT_POST_NONE, &err);
+  }
+}
 
+
+uint32_t get_time(void){
+  OS_ERR err;
+   OSMutexPend(&g_time_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
+    my_assert(OS_ERR_NONE == err);
+    
+      uint32_t retVal = g_time;
+      
+  OSMutexPost(&g_time_mutex, OS_OPT_POST_NONE, &err);
+    my_assert(OS_ERR_NONE == err);
+    
+    return retVal;
+}
