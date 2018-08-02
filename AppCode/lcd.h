@@ -16,6 +16,7 @@ extern OS_FLAG_GRP g_unit;
 extern OS_FLAG_GRP g_direction;
 extern OS_FLAG_GRP g_surface;
 
+extern void     init_lcd(void);
 extern void     lcd_task (void * p_arg);
 extern uint32_t get_depth(void);
 extern uint32_t add_depth(uint32_t addition);

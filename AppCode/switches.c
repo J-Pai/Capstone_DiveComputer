@@ -42,7 +42,7 @@ void toggle_unit_task(void * p_arg) {
         sprintf(p_str, "Unit was FT"); //test string
       }
       // testing!
-      GUIDEMO_API_writeLine(1u, p_str);
+      GUIDEMO_API_writeLine(6u, p_str);
   }
   
 }
@@ -60,7 +60,7 @@ void add_air_task(void * p_arg) {
       count++;
       sprintf(p_str, "Air was added %4u times", count); //test string
       // testing!
-      GUIDEMO_API_writeLine(0u, p_str);
+      GUIDEMO_API_writeLine(7u, p_str);
       // only add if at surface
       //uint32_t flag = (uint32_t)OSFlagPend(&g_unit, AT_SURFACE, 0,
       //                    OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 

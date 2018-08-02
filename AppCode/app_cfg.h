@@ -87,9 +87,17 @@
 #define  APP_CFG_ADC_TASK_PRIO                   14u
 #define  APP_CFG_ADC_TASK_STK_SIZE              192u
 
-// ------------ ADC TASK PRIO & STK SIZE ------------
+// ------------ ALARM TASK PRIO & STK SIZE ------------
 #define  APP_CFG_ALARM_TASK_PRIO                   14u
 #define  APP_CFG_ALARM_TASK_STK_SIZE              192u
+
+// ------------ ALARM TASK PRIO & STK SIZE ------------
+#define  APP_CFG_ALARM_TASK_PRIO                   14u
+#define  APP_CFG_ALARM_TASK_STK_SIZE              192u
+
+// ------------ LCD TASK PRIO & STK SIZE ------------
+#define  APP_CFG_LCD_TASK_PRIO                   14u
+#define  APP_CFG_LCD_TASK_STK_SIZE              192u
 
 // ------------ STARTUP TASK PRIO & STK SIZE ------------
 #define  APP_CFG_STARTUP_TASK_PRIO                   3u

@@ -88,6 +88,9 @@ static CPU_STK adc_task_Stk[APP_CFG_ADC_TASK_STK_SIZE];
 static OS_TCB alarm_task_TCB;
 static CPU_STK alarm_task_Stk[APP_CFG_ALARM_TASK_STK_SIZE];
 
+static OS_TCB lcd_task_TCB;
+static CPU_STK lcd_task_Stk[APP_CFG_LCD_TASK_STK_SIZE];
+
 static OS_TCB startup_task_TCB;
 static CPU_STK startup_task_Stk[APP_CFG_DEBOUNCE_TASK_STK_SIZE];
 
@@ -165,6 +168,7 @@ static void startup_task(void * p_arg)
     
     OSMutexCreate(&g_led_mutex, "Protects LED Driver", &err);
     my_assert(OS_ERR_NONE == err);
+    init_lcd();
 
     // Create the GUI task
     OSTaskCreate(&AppTaskGUI_TCB, "uC/GUI Task", (OS_TASK_PTR ) GUI_DemoTask,
@@ -215,11 +219,18 @@ static void startup_task(void * p_arg)
     my_assert(OS_ERR_NONE == err);
     
     // Alarm Task
-    
     OSTaskCreate(&alarm_task_TCB, "Alarm Task", (OS_TASK_PTR ) alarm_task,
                  0, APP_CFG_ALARM_TASK_PRIO,
                  &alarm_task_Stk[0], (APP_CFG_ALARM_TASK_STK_SIZE / 10u),
                   APP_CFG_ALARM_TASK_STK_SIZE, 0u, 0u, 0,
+                  (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
+    my_assert(OS_ERR_NONE == err);
+    
+    // Alarm Task
+    OSTaskCreate(&lcd_task_TCB, "LCD Task", (OS_TASK_PTR ) lcd_task,
+                 0, APP_CFG_LCD_TASK_PRIO,
+                 &lcd_task_Stk[0], (APP_CFG_LCD_TASK_STK_SIZE / 10u),
+                  APP_CFG_LCD_TASK_STK_SIZE, 0u, 0u, 0,
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
 }

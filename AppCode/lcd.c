@@ -21,8 +21,21 @@ static uint32_t g_air;
 static OS_MUTEX g_depth_mutex;
 static OS_MUTEX g_air_mutex;
 
-void lcd_task(void * p_arg) {
+void init_lcd() {
+  OS_ERR err;
+
+  OSMutexCreate(&g_depth_mutex, "Protects Depth Variable", &err);
+  my_assert(OS_ERR_NONE == err);
   
+  OSMutexCreate(&g_air_mutex, "Protects Air Variable", &err);
+  my_assert(OS_ERR_NONE == err);
+}
+
+void lcd_task(void * p_arg) {
+  OS_ERR err;
+  OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_HMSM_STRICT, &err);
+  my_assert(OS_ERR_NONE == err);
+
 }
 
 uint32_t get_depth() {
