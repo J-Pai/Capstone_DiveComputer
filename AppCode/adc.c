@@ -114,14 +114,24 @@ void adc_task(void * p_arg)
    // Configure ADC hardware to read Potentiometer ADC channel
    // and then interrupt.
   pot_init();
-  uint32_t size,time,depth,air_cap,prev_time,adcVal=0;
+  
+  OS_MSG_SIZE size = 0;
+  uint32_t time = 0;
+  uint32_t depth = 0;
+  uint32_t air_cap = 0;
+  uint32_t prev_time = 0;
   
   int32_t diveRate,airRate;
   prev_time= OS_TS_GET();//get_EDT();
   
   for(;;){
+    OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_HMSM_STRICT, &err);
+    my_assert(OS_ERR_NONE == err);
+
+        // Trigger ADC conversion.
+    pot_trigger_conversion();
     //Read ADC 
-    adcVal =(uint32_t)OSQPend(&g_adc_msg_queue,0,OS_OPT_PEND_BLOCKING,(OS_MSG_SIZE*)&size,0,&err);
+    uint32_t adcVal =(uint32_t)OSQPend(&g_adc_msg_queue, 0, OS_OPT_PEND_BLOCKING, &size, 0, &err);
     
     //Map Pot. Val to -50 to 50 m/s
     diveRate = ADC2RATE((int32_t)adcVal);
@@ -184,7 +194,7 @@ void adc_task(void * p_arg)
     // Generate string
     sprintf(p_str, "ADC3: %4u", adcVal);
     
-    GUIDEMO_API_writeLine(2u, p_str);
+    GUIDEMO_API_writeLine(5u, p_str);
 
   }
 }

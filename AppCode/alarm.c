@@ -54,9 +54,9 @@ void alarm_task(void * p_arg)
     }
     
     // Generate string
-    sprintf(p_str, "Alarm: %s", msg);
+    sprintf(p_str, "ALARM: %s", msg);
   
-    GUIDEMO_API_writeLine(5u, p_str);
+    GUIDEMO_API_writeLine(6u, p_str);
   }
 }
 

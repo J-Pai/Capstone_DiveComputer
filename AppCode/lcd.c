@@ -42,9 +42,7 @@ void lcd_task(void * p_arg) {
   for (;;) {
     OSTimeDlyHMSM(0, 0, 0, 20, OS_OPT_TIME_HMSM_STRICT, &err);
     my_assert(OS_ERR_NONE == err);
-  
-    GUIDEMO_SetColorBG(BG_COLOR_GREEN);
-    
+      
     sprintf(p_str, "Company Name"); //test string
     GUIDEMO_API_writeLine(0u, p_str);
     sprintf(p_str, "DEPTH: "); //test string
@@ -55,8 +53,7 @@ void lcd_task(void * p_arg) {
     GUIDEMO_API_writeLine(3u, p_str);
     sprintf(p_str, "EDT: "); //test string
     GUIDEMO_API_writeLine(4u, p_str);
-    sprintf(p_str, "ALARM: "); //test string
-    GUIDEMO_API_writeLine(6u, p_str);
+
   }
 }
 
