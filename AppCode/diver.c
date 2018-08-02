@@ -12,6 +12,7 @@
 #include "scuba.h"
 #include "adc.h"
 #include "diver.h"
+#include "lcd.h"
 
 #define TASK_DIVER_STK_SIZE 192
 
@@ -23,10 +24,10 @@ CPU_STK  diver_Stk[TASK_DIVER_STK_SIZE];
 
 void diver_task(void){
   OS_ERR err;
-  uint32_t size,time,depth,air_cap,prev_time;
+  uint32_t size,time,depth,air_cap,prev_time,adcVal=0;
   
   
-  int32_t  adcVal=0,diveRate,airRate;
+  int32_t diveRate,airRate;
   CPU_TS tick=5;
   prev_time= get_EDT();
   for(;;){
@@ -50,10 +51,10 @@ void diver_task(void){
     if(depth=0){
     if(OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, &tick, &err))
       {
-        if(get_AIR()+20<=MAX_AIR_IN_CL)
-          air_cap=change_AIR(20);
+        if(get_air()+20<=MAX_AIR_IN_CL)
+          air_cap=add_air(20);
         else
-          change_AIR(MAX_AIR_IN_CL-get_AIR());
+          add_air(MAX_AIR_IN_CL-get_air());
       }
     
     }else
@@ -62,9 +63,9 @@ void diver_task(void){
    airRate=gas_rate_in_cl(depth);
   //Rate of Gas consumption * time from last //High Granularity Intergral Approximation 
   //Subtract change from capacity Assumes that function perfoms the addition
-    air_cap=change_AIR(airRate * (time-prev_time));
+   air_cap=(airRate>=0)?add_air((uint32_t)airRate * (time-prev_time)):sub_air((uint32_t)-airRate * (time-prev_time));
   //Using rate and Elapsed time from last call remove/add depth
-    depth=change_DEPTH(diveRate*(time-prev_time));
+    depth=(diveRate>=0)? add_depth((uint32_t)diveRate*(time-prev_time)):sub_depth((uint32_t)-diveRate*(time-prev_time));
     }
     
     
