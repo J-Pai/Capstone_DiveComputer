@@ -9,6 +9,7 @@
 #include "os.h"
 #include "project.h"
 #include "GUIDEMO_API.h"
+#include "lcd.h"
 
 OS_FLAG_GRP g_unit;
 OS_FLAG_GRP g_direction;
@@ -21,6 +22,7 @@ static OS_MUTEX g_depth_mutex;
 static OS_MUTEX g_air_mutex;
 
 void lcd_task(void * p_arg) {
+  
 }
 
 uint32_t get_depth() {

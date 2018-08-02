@@ -1275,6 +1275,9 @@
       <name>$PROJ_DIR$\..\app_main.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\diver.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\lcd.c</name>
     </file>
     <file>
