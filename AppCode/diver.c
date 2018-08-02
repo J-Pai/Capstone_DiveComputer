@@ -51,14 +51,25 @@ void diver_task(void){
     air_cap=change_AIR(airRate * (time-prev_time));
   //Using rate and Elapsed time from last call remove/add depth
     depth=change_DEPTH(diveRate*(time-prev_time));
-    
-    if(depth=0 && OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 5, &err))
+    if(depth=0){
+    if(OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 5, &err))
       {
-        if(get_AIR()+20)
-        air_cap=change_AIR(20);
-        
+        if(get_AIR()+20<=MAX_AIR_IN_CL)
+          air_cap=change_AIR(20);
+        else
+          change_AIR(MAX_AIR_IN_CL-get_AIR());
       }
     
+    
+    
+    }else
+    {
+    
+    
+    
+    
+    
+    }
     
     
   
