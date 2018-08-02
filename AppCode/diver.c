@@ -18,17 +18,21 @@
 
 OS_TCB   diver_TCB;
 CPU_STK  diver_Stk[TASK_DIVER_STK_SIZE];
-
+#define test
+#ifdef test
+//int (*get_EDT)()= &OS_TS_GET;
+#elif
+//int (*get_EDT)()=
+#endif
 //Unit stored in milimeters
 
 void diver_task(void){
   OS_ERR err;
   uint32_t size,time,depth,air_cap,prev_time,adcVal=0;
   
-  
   int32_t diveRate,airRate;
   CPU_TS tick=5;
-  prev_time= get_EDT();
+  prev_time= OS_TS_GET();//get_EDT();
   
   for(;;){
   //Read ADC 
@@ -37,7 +41,7 @@ void diver_task(void){
   //Map Pot. Val to -50 to 50 m/s
    diveRate = ADC2RATE(adcVal);
   //Get Time
-    time=get_EDT();
+    time=OS_TS_GET();//get_EDT();
 
    //Unneeded if implementation is as expected
   //Get Current Postion 
