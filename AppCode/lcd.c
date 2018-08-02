@@ -21,6 +21,7 @@ static OS_MUTEX g_depth_mutex;
 static OS_MUTEX g_air_mutex;
 
 void lcd_task(void * p_arg) {
+  
 }
 
 uint32_t get_depth() {
