@@ -1272,31 +1272,13 @@
       <name>$PROJ_DIR$\..\alarm.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\app_cfg.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\app_main.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\cpu_cfg.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\lcd.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\lib_cfg.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\os_app_hooks.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\os_app_hooks.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\os_cfg.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\os_cfg_app.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\pushbutton.c</name>

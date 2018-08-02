@@ -119,7 +119,7 @@ static void led1_task(void * p_arg)
         my_assert(OS_ERR_NONE == err);
             
         // TODO: Sleep for 500ms
-        OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_STRICT, &err);
+        OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_NON_STRICT, &err);
     }
 }
 // *****************************************************************
@@ -151,7 +151,7 @@ static void toggle_unit_task(void * p_arg) {
         sprintf(p_str, "Unit was FT"); //test string
       }
       // testing!
-      GUIDEMO_API_writeLine(5u, p_str);
+      GUIDEMO_API_writeLine(4u, p_str);
   }
   
 }
