@@ -86,6 +86,9 @@ static CPU_STK debounce_react_task_Stk2[APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE];
 static OS_TCB adc_task_TCB;
 static CPU_STK adc_task_Stk[APP_CFG_ADC_TASK_STK_SIZE];
 
+static OS_TCB   diver_TCB;
+static CPU_STK  diver_Stk[TASK_DIVER_STK_SIZE];
+
 static OS_TCB alarm_task_TCB;
 static CPU_STK alarm_task_Stk[APP_CFG_ALARM_TASK_STK_SIZE];
 
@@ -170,7 +173,7 @@ static void startup_task(void * p_arg)
     OSMutexCreate(&g_led_mutex, "Protects LED Driver", &err);
     my_assert(OS_ERR_NONE == err);
     init_lcd();
-
+    
     // Create the GUI task
     OSTaskCreate(&AppTaskGUI_TCB, "uC/GUI Task", (OS_TASK_PTR ) GUI_DemoTask,
                  0, APP_CFG_TASK_GUI_PRIO,
@@ -211,6 +214,7 @@ static void startup_task(void * p_arg)
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
     
+    /*
     // ADC Task
     OSTaskCreate(&adc_task_TCB, "ADC Task", (OS_TASK_PTR ) adc_task,
                  0, APP_CFG_ADC_TASK_PRIO,
@@ -218,6 +222,7 @@ static void startup_task(void * p_arg)
                   APP_CFG_ADC_TASK_STK_SIZE, 0u, 0u, 0,
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
+    */
     
     // Alarm Task
     OSTaskCreate(&alarm_task_TCB, "Alarm Task", (OS_TASK_PTR ) alarm_task,
@@ -235,7 +240,6 @@ static void startup_task(void * p_arg)
                  (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
 
-                 
     //Diver Task
     OSTaskCreate(&diver_TCB, "diver Task", (OS_TASK_PTR ) diver_task,
                  0, APP_CFG_DIVER_TASK_PRIO ,

@@ -10,20 +10,24 @@
 #include "project.h"
 #include "GUIDEMO_API.h"
 #include "lcd.h"
+#include "alarm.h"
 
 OS_FLAG_GRP g_unit;
 OS_FLAG_GRP g_direction;
 OS_FLAG_GRP g_surface;
 
-static uint32_t g_depth;
-static uint32_t g_air;
+uint32_t g_depth;
+uint32_t g_air;
 
-static OS_MUTEX g_depth_mutex;
-static OS_MUTEX g_air_mutex;
+OS_MUTEX g_depth_mutex;
+OS_MUTEX g_air_mutex;
 
 void init_lcd() {
   OS_ERR err;
 
+  g_depth = 0;
+  g_air = 50;
+  
   OSMutexCreate(&g_depth_mutex, "Protects Depth Variable", &err);
   my_assert(OS_ERR_NONE == err);
   
@@ -33,9 +37,27 @@ void init_lcd() {
 
 void lcd_task(void * p_arg) {
   OS_ERR err;
-  OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_HMSM_STRICT, &err);
-  my_assert(OS_ERR_NONE == err);
-
+  char p_str[128]; //test string
+  
+  for (;;) {
+    OSTimeDlyHMSM(0, 0, 0, 20, OS_OPT_TIME_HMSM_STRICT, &err);
+    my_assert(OS_ERR_NONE == err);
+  
+    GUIDEMO_SetColorBG(BG_COLOR_GREEN);
+    
+    sprintf(p_str, "Company Name"); //test string
+    GUIDEMO_API_writeLine(0u, p_str);
+    sprintf(p_str, "DEPTH: "); //test string
+    GUIDEMO_API_writeLine(1u, p_str);
+    sprintf(p_str, "RATE: "); //test string
+    GUIDEMO_API_writeLine(2u, p_str);
+    sprintf(p_str, "AIR: "); //test string
+    GUIDEMO_API_writeLine(3u, p_str);
+    sprintf(p_str, "EDT: "); //test string
+    GUIDEMO_API_writeLine(4u, p_str);
+    sprintf(p_str, "ALARM: "); //test string
+    GUIDEMO_API_writeLine(6u, p_str);
+  }
 }
 
 uint32_t get_depth() {
