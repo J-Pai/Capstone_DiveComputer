@@ -12,7 +12,7 @@
 
 #define AT_SURFACE      BIT(0UL)
 
-#define SURFACE      BIT(0UL)
+#define NEUTRAL      BIT(0UL)
 #define DESCEND      BIT(1UL)
 #define ASCEND       BIT(2UL)
 

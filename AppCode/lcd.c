@@ -48,12 +48,16 @@ void lcd_task(void * p_arg) {
     sprintf(p_str, "DEPTH: %4u", get_depth()); //test string
     GUIDEMO_API_writeLine(1u, p_str);
     
-    uint32_t dir_flag = (uint32_t)OSFlagPend(&g_direction, 1, 0,
-                        OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
-                        NULL, &err);
+    uint32_t dir_flag = (uint32_t)OSFlagPend(&g_direction, ASCEND | DESCEND | NEUTRAL, 0,
+                        OS_OPT_PEND_FLAG_SET_ANY + OS_OPT_PEND_FLAG_CONSUME, NULL, &err);
     my_assert(OS_ERR_NONE == err);
-    
-    sprintf(p_str, "RATE: %4u", dir_flag); //test string
+    if (dir_flag == NEUTRAL) {
+      sprintf(p_str, "RATE: %4u neutral", dir_flag); //test string
+    } else if (dir_flag == ASCEND) {
+      sprintf(p_str, "RATE: %4u ascend", dir_flag); //test string
+    } else {
+        sprintf(p_str, "RATE: %4u descend", dir_flag); //test string
+    }
     GUIDEMO_API_writeLine(2u, p_str);
     sprintf(p_str, "AIR: "); //test string
     GUIDEMO_API_writeLine(3u, p_str);

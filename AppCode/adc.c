@@ -21,7 +21,7 @@
 
 #include "scuba.h"
 
-#include "diver.h"
+//#include "diver.h"
 #include "lcd.h"
 // **************************************************************************
 // NOTE: We define the adc_t struct inside the .c file, not the .h file.
@@ -135,10 +135,15 @@ void adc_task(void * p_arg)
     //Map Pot. Val to -50 to 50 m/s
     diveRate = ADC2RATE((int32_t)adcVal);
    
-    if (diveRate>=0) {
-      OSFlagPost(&g_direction, 0x1, OS_OPT_POST_FLAG_SET, &err);
+    if (diveRate == 0) {
+      OSFlagPost(&g_direction, NEUTRAL, OS_OPT_POST_FLAG_SET, &err);
+      my_assert(OS_ERR_NONE == err);
+    } else if (diveRate < 0) {
+      OSFlagPost(&g_direction, DESCEND, OS_OPT_POST_FLAG_SET, &err);
+      my_assert(OS_ERR_NONE == err);
     } else {
-      OSFlagPost(&g_direction, 0x1, OS_OPT_POST_FLAG_CLR, &err);
+      OSFlagPost(&g_direction, ASCEND, OS_OPT_POST_FLAG_SET, &err);
+      my_assert(OS_ERR_NONE == err);
     }
    
    

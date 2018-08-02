@@ -155,7 +155,7 @@ static void startup_task(void * p_arg)
   my_assert(OS_ERR_NONE == err);
   
   // Create flag to determine at direction
-  OSFlagCreate(&g_direction, "Direction Flag", SURFACE, &err);
+  OSFlagCreate(&g_direction, "Direction Flag", NEUTRAL, &err);
   my_assert(OS_ERR_NONE == err);
 
   #if OS_CFG_STAT_TASK_EN > 0u
