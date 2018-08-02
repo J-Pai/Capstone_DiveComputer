@@ -9,6 +9,7 @@
 #include "os.h"
 #include "project.h"
 #include "GUIDEMO_API.h"
+#inlcude "lcd.h"
 
 OS_FLAG_GRP g_unit;
 OS_FLAG_GRP g_direction;
