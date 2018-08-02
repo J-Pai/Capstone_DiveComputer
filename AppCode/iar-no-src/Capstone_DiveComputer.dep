@@ -1942,6 +1942,10 @@
       <name>$PROJ_DIR$\..\diver.c</name>
       <outputs>
         <tool>
+          <name>ICCARM</name>
+          <file> 135</file>
+        </tool>
+        <tool>
           <name>__cstat</name>
           <file> 630</file>
         </tool>
@@ -1957,7 +1961,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 111 418 458 484 528 69 447 474 527 71 461 439 490 124 488 529 625 133 88 190 455 401 497 495 491 398 438 530</file>
+          <file> 398 133 497 458 528 190 455 491 111 474 438 439 527 88 71 401 495 418 488 529 625 69 461 447 484 490 124 530</file>
         </tool>
       </inputs>
     </file>

@@ -39,7 +39,7 @@ void diver_task(void){
     adcVal =(uint32_t)OSQPend(&g_adc_msg_queue,0,OS_OPT_PEND_BLOCKING,(OS_MSG_SIZE*)&size,0,&err);
     
   //Map Pot. Val to -50 to 50 m/s
-   diveRate = ADC2RATE(adcVal);
+   diveRate = ADC2RATE((int32_t)adcVal);
   //Get Time
     time=OS_TS_GET();//get_EDT();
 
