@@ -118,7 +118,6 @@ void adc_task(void * p_arg)
   OS_MSG_SIZE size = 0;
   uint32_t time = 0;
   uint32_t depth = 0;
-  uint32_t air_cap = 0;
   uint32_t prev_time = 0;
   
   int32_t diveRate,airRate;
@@ -136,15 +135,19 @@ void adc_task(void * p_arg)
     //Map Pot. Val to -50 to 50 m/s
     diveRate = ADC2RATE((int32_t)adcVal);
    
-    (diveRate>=0)?OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_SET,&err):OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_CLR,&err);
+    if (diveRate>=0) {
+      OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_SET,&err);
+    } else {
+      OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_CLR,&err);
+    }
    
    
     //Get Time
-    time=OS_TS_GET();//get_EDT();
+    time = OS_TS_GET();//get_EDT();
 
     //Unneeded if implementation is as expected
     //Get Current Postion 
-    depth=get_depth();
+    depth = get_depth();
 
     //Unneeded if implementation is as expected
     //Get Current capacity ()
@@ -152,27 +155,27 @@ void adc_task(void * p_arg)
     
  
     if(depth == 0){
-      OSFlagPost(&g_surface,AT_SURFACE,OS_OPT_POST_FLAG_SET,&err);
+      OSFlagPost(&g_surface, AT_SURFACE, OS_OPT_POST_FLAG_SET, &err);
       my_assert(OS_ERR_NONE == err);
-      depth=(diveRate>=0)? add_depth((uint32_t)diveRate*(time-prev_time)):0;
+      depth = (diveRate >= 0)? add_depth((uint32_t)diveRate*(time - prev_time)) : 0;
     } else {
       //Call scuba functions to get rate of gas consumption
-      airRate=gas_rate_in_cl(depth);
+      airRate = gas_rate_in_cl(depth);
       //Rate of Gas consumption * time from last //High Granularity Intergral Approximation 
       //Subtract change from capacity Assumes that function perfoms the addition
-      air_cap=(airRate>=0)?add_air((uint32_t)airRate * (time-prev_time)):sub_air((uint32_t)-airRate * (time-prev_time));
+      uint32_t air_cap = sub_air((uint32_t)airRate * (time-prev_time));
       //Using rate and Elapsed time from last call remove/add depth
-      depth=(diveRate>=0)? add_depth((uint32_t)diveRate*(time-prev_time)):sub_depth((uint32_t)-diveRate*(time-prev_time));
+      depth = (diveRate >= 0) ? add_depth((uint32_t)diveRate*(time - prev_time)) : sub_depth((uint32_t)-diveRate*(time - prev_time));
       
       //Evaluate current Air Supply set flag accordingly 
-      if(air_cap<(gas_to_surface_in_cl(depth)))        
-        OSFlagPost(&g_alarm_flags,0x1,OS_OPT_POST_FLAG_SET,&err);
+      if(air_cap < (gas_to_surface_in_cl(depth)))        
+        OSFlagPost(&g_alarm_flags, 0x1, OS_OPT_POST_FLAG_SET, &err);
       //Evaluate rate of ascent set flag accordingly  
-      if(diveRate>ASCENT_RATE_LIMIT)
-        OSFlagPost(&g_alarm_flags,0x2,OS_OPT_POST_FLAG_SET,&err);
+      if(diveRate > ASCENT_RATE_LIMIT)
+        OSFlagPost(&g_alarm_flags, 0x2, OS_OPT_POST_FLAG_SET, &err);
       //Evaluate Current Depth set flag accordingly 
-      if(depth>MAX_DEPTH_IN_M)
-        OSFlagPost(&g_alarm_flags,0x4,OS_OPT_POST_FLAG_SET,&err);
+      if(depth > MAX_DEPTH_IN_M)
+        OSFlagPost(&g_alarm_flags, 0x4, OS_OPT_POST_FLAG_SET, &err);
     }
 
     if (adcVal == 0) {
