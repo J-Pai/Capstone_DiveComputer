@@ -1107,6 +1107,9 @@
     <file>
       <name>$PROJ_DIR$\..\scuba.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\switches.c</name>
+    </file>
   </group>
   <group>
     <name>BSP</name>

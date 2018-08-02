@@ -10,7 +10,7 @@
 #define UNIT_M          BIT(0UL)
 #define UNIT_FT         BIT(1UL)
 
-#define AT_SURFACE BIT(0UL);
+#define AT_SURFACE      BIT(0UL)
 
 extern OS_FLAG_GRP g_unit;
 extern OS_FLAG_GRP g_direction;

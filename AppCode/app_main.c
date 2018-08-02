@@ -60,6 +60,7 @@
 #include  "adc.h"
 #include  "alarm.h"
 #include  "lcd.h"
+#include  "switches.h"
 
 static OS_MUTEX g_led_mutex;
 
@@ -122,6 +123,7 @@ static void led1_task(void * p_arg)
         OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_NON_STRICT, &err);
     }
 }
+<<<<<<< HEAD
 // *****************************************************************
 //  SW1 Task - Toggle the units of displayed depth and rate
 // *****************************************************************
@@ -160,6 +162,8 @@ static void toggle_unit_task(void * p_arg) {
 // *****************************************************************
 static void add_air_task(void * p_arg) {
 }
+=======
+>>>>>>> 6978e3e2456b3ff995ee14407634caccf160eac6
 
 // *****************************************************************
 // Startup Task
@@ -179,7 +183,11 @@ static void startup_task(void * p_arg)
   my_assert(OS_ERR_NONE == err);
   
   // Create flag to determine units in (M or FT)
-  OSFlagCreate(&g_unit, "Unit Flag", 1, &err);
+  OSFlagCreate(&g_unit, "Unit Flag", UNIT_M, &err);
+  my_assert(OS_ERR_NONE == err);
+  
+  // Create flag to determine at surface or not
+  OSFlagCreate(&g_surface, "Surface Flag", AT_SURFACE, &err);
   my_assert(OS_ERR_NONE == err);
   
   #if OS_CFG_STAT_TASK_EN > 0u
@@ -232,7 +240,7 @@ static void startup_task(void * p_arg)
     
     // Switch 2 Reaction Task
     OSTaskCreate(&debounce_react_task2_TCB, "React SW2 Task", (OS_TASK_PTR ) add_air_task,
-                 (void *) 1, APP_CFG_DEBOUNCE_REACT_TASK_PRIO,
+                 0, APP_CFG_DEBOUNCE_REACT_TASK_PRIO,
                  &debounce_react_task_Stk2[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
                   APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE, 0u, 0u, 0,
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
@@ -273,7 +281,7 @@ int main(void)
     my_assert(OS_ERR_NONE == err);
     
     // Startup Task
-    OSTaskCreate(&startup_task_TCB, "LED Task", (OS_TASK_PTR ) startup_task,
+    OSTaskCreate(&startup_task_TCB, "Startup Task", (OS_TASK_PTR ) startup_task,
              0, APP_CFG_STARTUP_TASK_PRIO,
              &startup_task_Stk[0], (APP_CFG_STARTUP_TASK_STK_SIZE / 10u),
               APP_CFG_STARTUP_TASK_STK_SIZE, 0u, 0u, 0,
