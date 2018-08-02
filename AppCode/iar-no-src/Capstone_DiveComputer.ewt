@@ -1298,6 +1298,9 @@
     <file>
       <name>$PROJ_DIR$\..\pushbutton.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\scuba.c</name>
+    </file>
   </group>
   <group>
     <name>BSP</name>

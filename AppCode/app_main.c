@@ -59,6 +59,7 @@
 #include  "pushbutton.h"
 #include  "adc.h"
 #include  "alarm.h"
+#include  "lcd.h"
 
 static OS_MUTEX g_led_mutex;
 
@@ -121,46 +122,41 @@ static void led1_task(void * p_arg)
         OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_STRICT, &err);
     }
 }
-
 // *****************************************************************
-//  Debounce reaction task
+//  SW1 Task - Toggle the units of displayed depth and rate
 // *****************************************************************
-static void debounce_react_task(void * p_arg) {
-  OS_ERR err;  
-  OS_SEM * sem = NULL;
-  
-  // Get which line to put count on.
-  uint32_t line = (uint32_t) p_arg;
-  char * name = "";
-  
-  // Use line to determine which switch we want to use
-  if (line == 0) {
-    // Use switch 1 semaphore
-    sem = &g_sw1_sem;
-    name = "SW1: %4u";
-
-  } else {
-    // Use switch 2 semaphore
-    sem = &g_sw2_sem;
-    name = "SW2: %4u";
+static void toggle_unit_task(void * p_arg) {
+    OS_ERR err;
+    char p_str[14]; //test string
+    
+    for (;;) {
+      OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
+      my_assert(OS_ERR_NONE == err);
+      // get flag about current units
+      uint32_t flag = (uint32_t)OSFlagPend(&g_unit, UNIT_M | UNIT_FT, 0,
+      OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, NULL, &err);
+      my_assert(OS_ERR_NONE == err);
+      
+      if( flag == UNIT_M) {
+        // Post Flag - Feet
+        OSFlagPost(&g_unit, UNIT_FT, OS_OPT_POST_FLAG_SET, &err);
+        my_assert(OS_ERR_NONE == err);
+        sprintf(p_str, "Unit was M"); //test string
+      } else {
+        // Post Flag - Meters
+        OSFlagPost(&g_unit, UNIT_M, OS_OPT_POST_FLAG_SET, &err);
+        my_assert(OS_ERR_NONE == err);
+        sprintf(p_str, "Unit was FT"); //test string
+      }
+      // testing!
+      GUIDEMO_API_writeLine(5u, p_str)
   }
   
-  char p_str[16];
-  uint32_t count = 0;
-  sprintf(p_str, name, count);  
-  GUIDEMO_API_writeLine(line, p_str);
-
-  for (;;) {
-    OSSemPend(sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
-    my_assert(OS_ERR_NONE == err);
-    
-    count++;
-    
-    // Generate string
-    sprintf(p_str, name, count);
-    
-    GUIDEMO_API_writeLine(line, p_str);
-  }
+}
+// *****************************************************************
+//  SW2 Task - Add air to the tank in 20 liter increments (surface)
+// *****************************************************************
+static void add_air_task(void * p_arg) {
 }
 
 // *****************************************************************
@@ -178,6 +174,10 @@ static void startup_task(void * p_arg)
   GUIDEMO_API_init();
     
   OSFlagCreate(&g_alarm_flags, "ADC Alarm Flag", ALARM_NONE, &err);
+  my_assert(OS_ERR_NONE == err);
+  
+  // Create flag to determine units in (M or FT)
+  OSFlagCreate(&g_unit, "Unit Flag", UNIT_M, &err);
   my_assert(OS_ERR_NONE == err);
   
   #if OS_CFG_STAT_TASK_EN > 0u
@@ -221,7 +221,7 @@ static void startup_task(void * p_arg)
     my_assert(OS_ERR_NONE == err);
     
     // Switch 1 Reaction Task
-    OSTaskCreate(&debounce_react_task1_TCB, "React SW1 Task", (OS_TASK_PTR ) debounce_react_task,
+    OSTaskCreate(&debounce_react_task1_TCB, "React SW1 Task", (OS_TASK_PTR ) toggle_unit_task,
                  0, APP_CFG_DEBOUNCE_REACT_TASK_PRIO,
                  &debounce_react_task_Stk2[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
                   APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE, 0u, 0u, 0,
@@ -229,7 +229,7 @@ static void startup_task(void * p_arg)
     my_assert(OS_ERR_NONE == err);
     
     // Switch 2 Reaction Task
-    OSTaskCreate(&debounce_react_task2_TCB, "React SW2 Task", (OS_TASK_PTR ) debounce_react_task,
+    OSTaskCreate(&debounce_react_task2_TCB, "React SW2 Task", (OS_TASK_PTR ) add_air_task,
                  (void *) 1, APP_CFG_DEBOUNCE_REACT_TASK_PRIO,
                  &debounce_task_Stk[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
                   APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE, 0u, 0u, 0,
