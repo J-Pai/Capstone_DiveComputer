@@ -14,30 +14,34 @@
 #include "diver.h"
 #include "lcd.h"
 
-#define TASK_DIVER_STK_SIZE 192
 
 
 OS_TCB   diver_TCB;
 CPU_STK  diver_Stk[TASK_DIVER_STK_SIZE];
-
+#define test
+#ifdef test
+//int (*get_EDT)()= &OS_TS_GET;
+#elif
+//int (*get_EDT)()=
+#endif
 //Unit stored in milimeters
 
 void diver_task(void){
   OS_ERR err;
   uint32_t size,time,depth,air_cap,prev_time,adcVal=0;
   
-  
   int32_t diveRate,airRate;
   CPU_TS tick=5;
-  prev_time= get_EDT();
+  prev_time= OS_TS_GET();//get_EDT();
+  
   for(;;){
   //Read ADC 
     adcVal =(uint32_t)OSQPend(&g_adc_msg_queue,0,OS_OPT_PEND_BLOCKING,(OS_MSG_SIZE*)&size,0,&err);
     
   //Map Pot. Val to -50 to 50 m/s
-   diveRate = ADC2RATE(adcVal);
+   diveRate = ADC2RATE((int32_t)adcVal);
   //Get Time
-    time=get_EDT();
+    time=OS_TS_GET();//get_EDT();
 
    //Unneeded if implementation is as expected
   //Get Current Postion 
@@ -48,14 +52,8 @@ void diver_task(void){
     //air_cap=get_AIR();
     
  
-    if(depth==0){
-    if(OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, &tick, &err))
-      {
-        if(get_air()+20<=MAX_AIR_IN_CL)
-          air_cap=add_air(20);
-        else
-          add_air(MAX_AIR_IN_CL-get_air());
-      }
+    if(depth=0){
+      OSFlagPost(&g_surface,0x1u,OS_OPT_POST_FLAG_SET,&err);
     
     }else
     {
@@ -68,8 +66,6 @@ void diver_task(void){
     depth=(diveRate>=0)? add_depth((uint32_t)diveRate*(time-prev_time)):sub_depth((uint32_t)-diveRate*(time-prev_time));
     }
     
-    
-  
   //Evaluate current Air Supply set flag accordingly 
     if(air_cap<(gas_to_surface_in_cl(depth)))        
         OSFlagPost(&g_alarm_flags,0x1,OS_OPT_POST_FLAG_SET,&err);
