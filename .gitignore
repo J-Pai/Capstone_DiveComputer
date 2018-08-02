@@ -1,2 +1,5 @@
 settings/
 FLASH/
+*.dep
+*.ewd
+*.ewt
