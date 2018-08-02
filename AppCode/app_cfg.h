@@ -69,6 +69,8 @@
 #define  APP_CFG_TOUCH_TASK_PRIO                   24u
 #define  APP_CFG_TOUCH_TASK_STK_SIZE              128u
 
+// ******************************************************************************************************
+
 // ------------ LED TASK PRIO & STK SIZE ------------
 #define  APP_CFG_LED_TASK_PRIO                   14u
 #define  APP_CFG_LED_TASK_STK_SIZE              192u
@@ -77,7 +79,7 @@
 #define  APP_CFG_DEBOUNCE_TASK_PRIO                   14u
 #define  APP_CFG_DEBOUNCE_TASK_STK_SIZE              192u
 
-// ------------ BUTTON DEBOUNCER REACTION TASK PRIO & STK SIZE ------------
+// ------------ BUTTON DEBOUNCER REACT TASK PRIO & STK SIZE ------------
 #define  APP_CFG_DEBOUNCE_REACT_TASK_PRIO                   14u
 #define  APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE              192u
 

@@ -75,12 +75,6 @@ static CPU_STK led1_task_Stk[APP_CFG_LED_TASK_STK_SIZE];
 static OS_TCB debounce_task_TCB;
 static CPU_STK debounce_task_Stk[APP_CFG_DEBOUNCE_TASK_STK_SIZE];
 
-static OS_TCB debounce_react_task1_TCB;
-static CPU_STK debounce_react_task_Stk1[APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE];
-
-static OS_TCB debounce_react_task2_TCB;
-static CPU_STK debounce_react_task_Stk2[APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE];
-
 static OS_TCB adc_task_TCB;
 static CPU_STK adc_task_Stk[APP_CFG_ADC_TASK_STK_SIZE];
 
@@ -123,6 +117,8 @@ static void led1_task(void * p_arg)
     }
 }
 // *****************************************************************
+<<<<<<< HEAD
+=======
 //  SW1 Task - Toggle the units of displayed depth and rate
 // *****************************************************************
 static void toggle_unit_task(void * p_arg) {
@@ -133,10 +129,8 @@ static void toggle_unit_task(void * p_arg) {
       OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
       my_assert(OS_ERR_NONE == err);
       // get flag about current units
-      
       uint32_t flag = (uint32_t)OSFlagPend(&g_unit, UNIT_M | UNIT_FT, 0,
-                          OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
-                          NULL, &err);
+      OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, NULL, &err);
       my_assert(OS_ERR_NONE == err);
       
       if( flag == UNIT_M) {
@@ -151,7 +145,7 @@ static void toggle_unit_task(void * p_arg) {
         sprintf(p_str, "Unit was FT"); //test string
       }
       // testing!
-      GUIDEMO_API_writeLine(5u, p_str);
+      GUIDEMO_API_writeLine(5u, p_str)
   }
   
 }
@@ -162,6 +156,7 @@ static void add_air_task(void * p_arg) {
 }
 
 // *****************************************************************
+>>>>>>> 9749c64a9267e8846c62b99a2129e9244df03cb8
 // Startup Task
 // *****************************************************************
 static void startup_task(void * p_arg) 
@@ -179,7 +174,7 @@ static void startup_task(void * p_arg)
   my_assert(OS_ERR_NONE == err);
   
   // Create flag to determine units in (M or FT)
-  OSFlagCreate(&g_unit, "Unit Flag", 1, &err);
+  OSFlagCreate(&g_unit, "Unit Flag", UNIT_M, &err);
   my_assert(OS_ERR_NONE == err);
   
   #if OS_CFG_STAT_TASK_EN > 0u
@@ -222,10 +217,12 @@ static void startup_task(void * p_arg)
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
     
+<<<<<<< HEAD
+=======
     // Switch 1 Reaction Task
     OSTaskCreate(&debounce_react_task1_TCB, "React SW1 Task", (OS_TASK_PTR ) toggle_unit_task,
                  0, APP_CFG_DEBOUNCE_REACT_TASK_PRIO,
-                 &debounce_react_task_Stk1[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
+                 &debounce_react_task_Stk2[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
                   APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE, 0u, 0u, 0,
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
@@ -233,11 +230,12 @@ static void startup_task(void * p_arg)
     // Switch 2 Reaction Task
     OSTaskCreate(&debounce_react_task2_TCB, "React SW2 Task", (OS_TASK_PTR ) add_air_task,
                  (void *) 1, APP_CFG_DEBOUNCE_REACT_TASK_PRIO,
-                 &debounce_react_task_Stk2[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
+                 &debounce_task_Stk[0], (APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE / 10u),
                   APP_CFG_DEBOUNCE_REACT_TASK_STK_SIZE, 0u, 0u, 0,
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
     
+>>>>>>> 9749c64a9267e8846c62b99a2129e9244df03cb8
     // ADC Task
     OSTaskCreate(&adc_task_TCB, "ADC Task", (OS_TASK_PTR ) adc_task,
                  0, APP_CFG_ADC_TASK_PRIO,
