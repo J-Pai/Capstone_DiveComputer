@@ -29,6 +29,7 @@ void diver_task(void){
   int32_t diveRate,airRate;
   CPU_TS tick=5;
   prev_time= get_EDT();
+  
   for(;;){
   //Read ADC 
     adcVal =(uint32_t)OSQPend(&g_adc_msg_queue,0,OS_OPT_PEND_BLOCKING,(OS_MSG_SIZE*)&size,0,&err);
@@ -48,13 +49,7 @@ void diver_task(void){
     
  
     if(depth=0){
-    if(OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, &tick, &err))
-      {
-        if(get_air()+20<=MAX_AIR_IN_CL)
-          air_cap=add_air(20);
-        else
-          add_air(MAX_AIR_IN_CL-get_air());
-      }
+      OSFlagPost(&g_surface,0x1u,OS_OPT_POST_FLAG_SET,&err);
     
     }else
     {
@@ -67,8 +62,6 @@ void diver_task(void){
     depth=(diveRate>=0)? add_depth((uint32_t)diveRate*(time-prev_time)):sub_depth((uint32_t)-diveRate*(time-prev_time));
     }
     
-    
-  
   //Evaluate current Air Supply set flag accordingly 
     if(air_cap<(gas_to_surface_in_cl(depth)))        
         OSFlagPost(&g_alarm_flags,0x1,OS_OPT_POST_FLAG_SET,&err);
