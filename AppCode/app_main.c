@@ -120,7 +120,7 @@ static void led1_task(void * p_arg)
         my_assert(OS_ERR_NONE == err);
             
         // TODO: Sleep for 500ms
-        OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_STRICT, &err);
+        OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_NON_STRICT, &err);
     }
 }
 
