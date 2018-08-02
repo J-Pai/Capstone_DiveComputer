@@ -127,7 +127,7 @@ void adc_task(void * p_arg)
   // prev_time= OS_TS_GET();//get_EDT();
 
   for(;;){
-    OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_HMSM_STRICT, &err);
+    OSTimeDlyHMSM(0, 0, 0,125, OS_OPT_TIME_HMSM_STRICT, &err);
     my_assert(OS_ERR_NONE == err);
 
     // Trigger ADC conversion.
@@ -165,16 +165,15 @@ void adc_task(void * p_arg)
     if(depth == 0){
       OSFlagPost(&g_surface, AT_SURFACE, OS_OPT_POST_FLAG_SET, &err);
       my_assert(OS_ERR_NONE == err);
-      depth = (diveRate >= 0)? add_depth((uint32_t)diveRate*(time - prev_time)) : 0;
+      depth = (diveRate <= 0)? add_depth((uint32_t)diveRate*(time - prev_time)*1000/60) : 0;
     } else {
       //Call scuba functions to get rate of gas consumption
       airRate = gas_rate_in_cl(depth);
       //Rate of Gas consumption * time from last //High Granularity Intergral Approximation 
       //Subtract change from capacity Assumes that function perfoms the addition
-      uint32_t air_cap = sub_air(((uint32_t)airRate * (time - prev_time)) / 500);
+      uint32_t air_cap = sub_air(((uint32_t)airRate * (time - prev_time)));
       //Using rate and Elapsed time from last call remove/add depth
-      depth = (diveRate >= 0) ? add_depth(((uint32_t)diveRate * (time - prev_time)) / 1000) : 
-                                sub_depth(((uint32_t)-diveRate * (time - prev_time)) / 1000);
+      depth = (diveRate <= 0) ? add_depth(((uint32_t)diveRate * (time - prev_time))*1000/60) :sub_depth(((uint32_t)-diveRate * (time - prev_time))*1000/60);
       
       //Evaluate current Air Supply set flag accordingly 
       if(air_cap < (gas_to_surface_in_cl(depth)))        
@@ -183,7 +182,7 @@ void adc_task(void * p_arg)
       if(diveRate > ASCENT_RATE_LIMIT)
         OSFlagPost(&g_alarm_flags, 0x2, OS_OPT_POST_FLAG_SET, &err);
       //Evaluate Current Depth set flag accordingly 
-      if(depth > MAX_DEPTH_IN_M)
+      if(depth > MAX_DEPTH_IN_M *1000)
         OSFlagPost(&g_alarm_flags, 0x4, OS_OPT_POST_FLAG_SET, &err);
     }
 

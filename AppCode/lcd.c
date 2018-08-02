@@ -92,7 +92,10 @@ uint32_t sub_depth(uint32_t subtraction) {
   OS_ERR err;
   OSMutexPend(&g_depth_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
   my_assert(OS_ERR_NONE == err);
+  if(g_depth > subtraction)
   g_depth = g_depth - subtraction;
+  else
+  g_depth =0;  
   uint32_t temp = g_depth;
   OSMutexPost(&g_depth_mutex, OS_OPT_POST_NONE, &err);
   my_assert(OS_ERR_NONE == err);
