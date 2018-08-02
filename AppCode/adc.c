@@ -126,6 +126,7 @@ void adc_task(void * p_arg)
   
   for(;;){
     OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_HMSM_STRICT, &err);
+    //my_assert(OS_ERR_NONE == err);
 
         // Trigger ADC conversion.
     pot_trigger_conversion();
