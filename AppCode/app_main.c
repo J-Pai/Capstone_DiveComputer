@@ -123,7 +123,6 @@ static void led1_task(void * p_arg)
         OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_NON_STRICT, &err);
     }
 }
-<<<<<<< HEAD
 // *****************************************************************
 //  SW1 Task - Toggle the units of displayed depth and rate
 // *****************************************************************
@@ -162,8 +161,6 @@ static void toggle_unit_task(void * p_arg) {
 // *****************************************************************
 static void add_air_task(void * p_arg) {
 }
-=======
->>>>>>> 6978e3e2456b3ff995ee14407634caccf160eac6
 
 // *****************************************************************
 // Startup Task
