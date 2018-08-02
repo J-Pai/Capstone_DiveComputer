@@ -39,6 +39,10 @@ void diver_task(void){
     
   //Map Pot. Val to -50 to 50 m/s
    diveRate = ADC2RATE((int32_t)adcVal);
+   
+   (diveRate>=0)?OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_SET,&err):OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_CLR,&err);
+   
+   
   //Get Time
     time=OS_TS_GET();//get_EDT();
 

@@ -86,7 +86,7 @@ uint32_t add_air(uint32_t addition) {
   my_assert(OS_ERR_NONE == err);
   g_air = g_air + addition;
   uint32_t temp = g_air;
-  OSMutexPost(&g_depth_mutex, OS_OPT_POST_NONE, &err);
+  OSMutexPost(&g_air_mutex, OS_OPT_POST_NONE, &err);
   my_assert(OS_ERR_NONE == err);
   return temp;
 }
