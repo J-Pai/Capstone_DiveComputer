@@ -14,5 +14,5 @@
 extern void     adc_task (void * p_arg);
 extern void     ADC_IRQHandler(void);
 extern uint32_t get_time(void);
-extern void m_time(void);
+extern void m_time(void * p_arg);
 #endif /* _ADC_H */

@@ -134,7 +134,7 @@ uint32_t sub_air(uint32_t subtraction) {
   my_assert(OS_ERR_NONE == err);
   g_air = g_air - subtraction;
   uint32_t temp = g_air;
-  OSMutexPost(&g_depth_mutex, OS_OPT_POST_NONE, &err);
+  OSMutexPost(&g_air_mutex, OS_OPT_POST_NONE, &err);
   my_assert(OS_ERR_NONE == err);
   return temp;
 }
