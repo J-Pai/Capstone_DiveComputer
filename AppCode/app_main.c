@@ -240,7 +240,6 @@ static void startup_task(void * p_arg)
 int main(void)
 {
     OS_ERR   err;
-
     HAL_Init();
     BSP_SystemClkCfg();   // Init. system clock frequency to 200MHz
     CPU_Init();           // Initialize the uC/CPU services
