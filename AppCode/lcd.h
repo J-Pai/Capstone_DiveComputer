@@ -25,6 +25,8 @@ extern void     lcd_task (void * p_arg);
 extern uint32_t get_depth(void);
 extern uint32_t add_depth(uint32_t addition);
 extern uint32_t sub_depth(uint32_t subtraction);
+extern int32_t get_rate(void);
+extern int32_t set_rate(int32_t new_rate);
 extern uint32_t get_air(void);
 extern uint32_t add_air(uint32_t addition);
 extern uint32_t sub_air(uint32_t subtraction);

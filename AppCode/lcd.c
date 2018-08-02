@@ -17,9 +17,11 @@ OS_FLAG_GRP g_direction;
 OS_FLAG_GRP g_surface;
 
 uint32_t g_depth;
+uint32_t g_rate;
 uint32_t g_air;
 
 OS_MUTEX g_depth_mutex;
+OS_MUTEX g_rate_mutex;
 OS_MUTEX g_air_mutex;
 
 void init_lcd() {
@@ -30,7 +32,8 @@ void init_lcd() {
   
   OSMutexCreate(&g_depth_mutex, "Protects Depth Variable", &err);
   my_assert(OS_ERR_NONE == err);
-  
+  OSMutexCreate(&g_rate_mutex, "Protects Rate Variable", &err);
+  my_assert(OS_ERR_NONE == err);
   OSMutexCreate(&g_air_mutex, "Protects Air Variable", &err);
   my_assert(OS_ERR_NONE == err);
 }
@@ -38,6 +41,9 @@ void init_lcd() {
 void lcd_task(void * p_arg) {
   OS_ERR err;
   char p_str[128]; //test string
+  
+  OS_TICK start = OSTimeGet(&err);
+  my_assert(OS_ERR_NONE == err);
   
   for (;;) {
     OSTimeDlyHMSM(0, 0, 0, 20, OS_OPT_TIME_HMSM_STRICT, &err);
@@ -51,17 +57,12 @@ void lcd_task(void * p_arg) {
     uint32_t dir_flag = (uint32_t)OSFlagPend(&g_direction, ASCEND | DESCEND | NEUTRAL, 0,
                         OS_OPT_PEND_FLAG_SET_ANY + OS_OPT_PEND_FLAG_CONSUME, NULL, &err);
     my_assert(OS_ERR_NONE == err);
-    if (dir_flag == NEUTRAL) {
-      sprintf(p_str, "RATE: %4u neutral", dir_flag); //test string
-    } else if (dir_flag == ASCEND) {
-      sprintf(p_str, "RATE: %4u ascend", dir_flag); //test string
-    } else {
-        sprintf(p_str, "RATE: %4u descend", dir_flag); //test string
-    }
+    char * flag = (dir_flag == ASCEND) ? "ASCEND" : ((dir_flag == DESCEND) ? "DESCEND" : "NEUTRAL");
+    sprintf(p_str, "RATE: %s %4d", flag, get_rate()); //test string
     GUIDEMO_API_writeLine(2u, p_str);
     sprintf(p_str, "AIR: "); //test string
     GUIDEMO_API_writeLine(3u, p_str);
-    sprintf(p_str, "EDT: "); //test string
+    sprintf(p_str, "EDT: %4u", (OSTimeGet(&err) - start) / 1000); //test string
     GUIDEMO_API_writeLine(4u, p_str);
 
   }
@@ -94,6 +95,27 @@ uint32_t sub_depth(uint32_t subtraction) {
   my_assert(OS_ERR_NONE == err);
   g_depth = g_depth - subtraction;
   uint32_t temp = g_depth;
+  OSMutexPost(&g_depth_mutex, OS_OPT_POST_NONE, &err);
+  my_assert(OS_ERR_NONE == err);
+  return temp;
+}
+
+int32_t get_rate() {
+  OS_ERR err;
+  OSMutexPend(&g_depth_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
+  my_assert(OS_ERR_NONE == err);
+  int32_t temp = g_rate;
+  OSMutexPost(&g_depth_mutex, OS_OPT_POST_NONE, &err);
+  my_assert(OS_ERR_NONE == err);
+  return temp;
+}
+
+int32_t set_rate(int32_t new_rate) {
+  OS_ERR err;
+  OSMutexPend(&g_depth_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
+  my_assert(OS_ERR_NONE == err);
+  g_rate = new_rate;
+  int32_t temp = g_rate;
   OSMutexPost(&g_depth_mutex, OS_OPT_POST_NONE, &err);
   my_assert(OS_ERR_NONE == err);
   return temp;
