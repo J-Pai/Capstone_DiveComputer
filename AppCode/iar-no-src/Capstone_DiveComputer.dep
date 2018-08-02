@@ -1580,12 +1580,15 @@
           <file> 475</file>
         </tool>
         <tool>
+<<<<<<< HEAD
           <name>BICOMP</name>
           <file> 566</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
+=======
+>>>>>>> 43ea14aae537b7740a1dcfdce84a6c5332e3758e
           <name>ICCARM</name>
           <file> 639 659 646 610 637 654 645 630 245 252 236 253 640 226 627 644 185 170 171 634 214 221 652 203 231 241 215 243 279 244</file>
         </tool>
@@ -1688,12 +1691,15 @@
           <file> 449</file>
         </tool>
         <tool>
+<<<<<<< HEAD
           <name>BICOMP</name>
           <file> 557</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
+=======
+>>>>>>> 43ea14aae537b7740a1dcfdce84a6c5332e3758e
           <name>ICCARM</name>
           <file> 226 627 644 185 170 640 659 171 634 214 221 652 203 231 241 215 243 237</file>
         </tool>
@@ -1920,11 +1926,15 @@
       <inputs>
         <tool>
           <name>ICCARM</name>
+<<<<<<< HEAD
           <file> 24 185 170 640 659 171 634 214 221 652 203 231</file>
         </tool>
         <tool>
           <name>BICOMP</name>
           <file> 185 170 214 171 221 659 24 634 203 640 652 231</file>
+=======
+          <file> 224 644 652 617 640 646 648 632 227 238 220 210 618 637 163 155 651 177 649 199 201 650 202 209 242 204 241 237 659 222 658 273</file>
+>>>>>>> 43ea14aae537b7740a1dcfdce84a6c5332e3758e
         </tool>
       </inputs>
     </file>

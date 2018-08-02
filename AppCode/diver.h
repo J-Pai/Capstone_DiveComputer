@@ -8,7 +8,5 @@ void diver_task(void);
 extern OS_FLAG_GRP g_alarm_flags;
 extern OS_Q g_adc_msg_queue;
 extern uint32_t currDepth;
-extern OS_TCB   diver_TCB;
-extern CPU_STK  diver_Stk[TASK_DIVER_STK_SIZE];
 
 #endif 
