@@ -48,7 +48,7 @@ void diver_task(void){
     //air_cap=get_AIR();
     
  
-    if(depth=0){
+    if(depth==0){
     if(OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, &tick, &err))
       {
         if(get_air()+20<=MAX_AIR_IN_CL)

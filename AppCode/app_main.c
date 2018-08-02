@@ -123,44 +123,7 @@ static void led1_task(void * p_arg)
         OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_NON_STRICT, &err);
     }
 }
-// *****************************************************************
-//  SW1 Task - Toggle the units of displayed depth and rate
-// *****************************************************************
-static void toggle_unit_task(void * p_arg) {
-    OS_ERR err;
-    char p_str[14]; //test string
-    
-    for (;;) {
-      OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
-      my_assert(OS_ERR_NONE == err);
-      // get flag about current units
-      
-      uint32_t flag = (uint32_t)OSFlagPend(&g_unit, UNIT_M | UNIT_FT, 0,
-                          OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
-                          NULL, &err);
-      my_assert(OS_ERR_NONE == err);
-      
-      if( flag == UNIT_M) {
-        // Post Flag - Feet
-        OSFlagPost(&g_unit, UNIT_FT, OS_OPT_POST_FLAG_SET, &err);
-        my_assert(OS_ERR_NONE == err);
-        sprintf(p_str, "Unit was M"); //test string
-      } else {
-        // Post Flag - Meters
-        OSFlagPost(&g_unit, UNIT_M, OS_OPT_POST_FLAG_SET, &err);
-        my_assert(OS_ERR_NONE == err);
-        sprintf(p_str, "Unit was FT"); //test string
-      }
-      // testing!
-      GUIDEMO_API_writeLine(4u, p_str);
-  }
-  
-}
-// *****************************************************************
-//  SW2 Task - Add air to the tank in 20 liter increments (surface)
-// *****************************************************************
-static void add_air_task(void * p_arg) {
-}
+
 
 // *****************************************************************
 // Startup Task
