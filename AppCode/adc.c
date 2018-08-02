@@ -125,7 +125,7 @@ void adc_task(void * p_arg)
   
   for(;;){
     OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_HMSM_STRICT, &err);
-    //my_assert(OS_ERR_NONE == err);
+    my_assert(OS_ERR_NONE == err);
 
         // Trigger ADC conversion.
     pot_trigger_conversion();
@@ -136,9 +136,11 @@ void adc_task(void * p_arg)
     diveRate = ADC2RATE((int32_t)adcVal);
    
     if (diveRate>=0) {
-      OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_SET,&err);
+      OSFlagPost(&g_direction,ASCEND,OS_OPT_POST_FLAG_SET,&err);
+      my_assert(OS_ERR_NONE == err);
     } else {
-      OSFlagPost(&g_direction,0x1,OS_OPT_POST_FLAG_CLR,&err);
+      OSFlagPost(&g_direction,DESCEND,OS_OPT_POST_FLAG_SET,&err);
+      my_assert(OS_ERR_NONE == err);
     }
    
    

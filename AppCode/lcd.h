@@ -12,6 +12,10 @@
 
 #define AT_SURFACE      BIT(0UL)
 
+#define SURFACE      BIT(0UL)
+#define DESCEND      BIT(1UL)
+#define ASCEND       BIT(2UL)
+
 extern OS_FLAG_GRP g_unit;
 extern OS_FLAG_GRP g_direction;
 extern OS_FLAG_GRP g_surface;

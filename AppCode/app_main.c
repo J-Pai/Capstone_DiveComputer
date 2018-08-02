@@ -154,6 +154,10 @@ static void startup_task(void * p_arg)
   OSFlagCreate(&g_surface, "Surface Flag", AT_SURFACE, &err);
   my_assert(OS_ERR_NONE == err);
   
+  // Create flag to determine at direction
+  OSFlagCreate(&g_direction, "Direction Flag", SURFACE, &err);
+  my_assert(OS_ERR_NONE == err);
+
   #if OS_CFG_STAT_TASK_EN > 0u
     // Compute CPU capacity with no other task running
     OSStatTaskCPUUsageInit(&err);
