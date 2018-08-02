@@ -11,6 +11,7 @@
 #include "GUIDEMO_API.h"
 #include "lcd.h"
 #include "alarm.h"
+#include "scuba.h"
 
 OS_FLAG_GRP g_unit;
 OS_FLAG_GRP g_direction;
@@ -26,7 +27,7 @@ void init_lcd() {
   OS_ERR err;
 
   g_depth = 0;
-  g_air = 50;
+  g_air = 50U;
   
   OSMutexCreate(&g_depth_mutex, "Protects Depth Variable", &err);
   my_assert(OS_ERR_NONE == err);
@@ -59,7 +60,7 @@ void lcd_task(void * p_arg) {
         sprintf(p_str, "RATE: %4u descend", dir_flag); //test string
     }
     GUIDEMO_API_writeLine(2u, p_str);
-    sprintf(p_str, "AIR: "); //test string
+    sprintf(p_str, "AIR: %4u", get_air()); //test string
     GUIDEMO_API_writeLine(3u, p_str);
     sprintf(p_str, "EDT: "); //test string
     GUIDEMO_API_writeLine(4u, p_str);
@@ -111,10 +112,17 @@ uint32_t get_air() {
 
 uint32_t add_air(uint32_t addition) {
   OS_ERR err;
+  uint32_t max = 2000UL;
+  uint32_t temp;
   OSMutexPend(&g_air_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
   my_assert(OS_ERR_NONE == err);
   g_air = g_air + addition;
-  uint32_t temp = g_air;
+  if (g_air < max) {
+    temp = g_air;
+  } else {
+    temp = max;
+    g_air = max;
+  }
   OSMutexPost(&g_air_mutex, OS_OPT_POST_NONE, &err);
   my_assert(OS_ERR_NONE == err);
   return temp;

@@ -11,6 +11,7 @@
 #define _SCUBA_H
 
 enum { MAX_AIR_IN_CL = (2000 * 100) };  // Compressed air capacity (in cL).
+enum { MAX_AIR_IN_L = 2000};
 enum { MAX_DEPTH_IN_M = 40 };             // Maximum safe depth (in meters).
 enum { ASCENT_RATE_LIMIT = 15 };          // Maximum safe ascent rate (in m/min).
 
