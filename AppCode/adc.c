@@ -9,20 +9,16 @@
 
 #include <stdlib.h>  // NULL
 #include <stdio.h>   // sprintf()
+#include <stdint.h>
 #include "os.h"
 #include "project.h"
 #include "GUIDEMO_API.h"  // write to LCD
 #include "adc.h"
 #include "bsp_clock.h"
 #include "alarm.h"
-
-
-#include <stdint.h>
-
 #include "scuba.h"
-
-//#include "diver.h"
 #include "lcd.h"
+
 // **************************************************************************
 // NOTE: We define the adc_t struct inside the .c file, not the .h file.
 //       This is a form of encapsulation; we do not want to give

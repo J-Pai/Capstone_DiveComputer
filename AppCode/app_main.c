@@ -61,7 +61,6 @@
 #include  "alarm.h"
 #include  "lcd.h"
 #include  "switches.h"
-#include  "diver.h"
 
 static OS_MUTEX g_led_mutex;
 
