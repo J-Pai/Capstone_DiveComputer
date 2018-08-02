@@ -44,13 +44,7 @@ void diver_task(void){
   //Get Current capacity ()
     //air_cap=get_AIR();
     
-  //Call scuba functions to get rate of gas consumption
-   airRate=gas_rate_in_cl(depth);
-  //Rate of Gas consumption * time from last //High Granularity Intergral Approximation 
-  //Subtract change from capacity Assumes that function perfoms the addition
-    air_cap=change_AIR(airRate * (time-prev_time));
-  //Using rate and Elapsed time from last call remove/add depth
-    depth=change_DEPTH(diveRate*(time-prev_time));
+ 
     if(depth=0){
     if(OSFlagPend(&g_alarm_flags, 0x8u,0, OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 5, &err))
       {
@@ -60,15 +54,15 @@ void diver_task(void){
           change_AIR(MAX_AIR_IN_CL-get_AIR());
       }
     
-    
-    
     }else
     {
-    
-    
-    
-    
-    
+       //Call scuba functions to get rate of gas consumption
+   airRate=gas_rate_in_cl(depth);
+  //Rate of Gas consumption * time from last //High Granularity Intergral Approximation 
+  //Subtract change from capacity Assumes that function perfoms the addition
+    air_cap=change_AIR(airRate * (time-prev_time));
+  //Using rate and Elapsed time from last call remove/add depth
+    depth=change_DEPTH(diveRate*(time-prev_time));
     }
     
     
