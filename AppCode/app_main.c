@@ -71,9 +71,6 @@ static  CPU_STK  AppTaskGUI_Stk[APP_CFG_TASK_GUI_STK_SIZE];
 static OS_TCB led1_task_TCB;
 static CPU_STK led1_task_Stk[APP_CFG_LED_TASK_STK_SIZE];
 
-static OS_TCB led2_task_TCB;
-static CPU_STK led2_task_Stk[APP_CFG_LED_TASK_STK_SIZE];
-
 static OS_TCB debounce_task_TCB;
 static CPU_STK debounce_task_Stk[APP_CFG_DEBOUNCE_TASK_STK_SIZE];
 
@@ -93,13 +90,13 @@ static OS_TCB startup_task_TCB;
 static CPU_STK startup_task_Stk[APP_CFG_DEBOUNCE_TASK_STK_SIZE];
 
 // *****************************************************************
-// Flash LED1 at 1 Hz (500ms on / 500ms off)
+// Flash LED1 at 3 Hz
 // *****************************************************************
 static void led1_task(void * p_arg)
 {
     OS_ERR err;
   
-    uint32_t delay = 500UL;
+    uint32_t delay = 1500UL;
     OSMutexPend(&g_led_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
     my_assert(OS_ERR_NONE == err);
     
@@ -122,39 +119,6 @@ static void led1_task(void * p_arg)
             
         // TODO: Sleep for 500ms
         OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_STRICT, &err);
-    }
-}
-
-// *****************************************************************
-// Flash LED2 at 3 Hz (1500ms on / 1500ms off)
-// *****************************************************************
-static void led2_task(void * p_arg)
-{
-    OS_ERR err;
-  
-    uint32_t delay = 1500UL;
-    OSMutexPend(&g_led_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
-    my_assert(OS_ERR_NONE == err);
-    
-    BSP_LED_On(LED2);
-    
-    OSMutexPost(&g_led_mutex, OS_OPT_POST_NONE, &err);
-    my_assert(OS_ERR_NONE == err);
-    
-    // Task main loop
-    for (;;)
-    {
-        // TODO: Toggle LED2
-        OSMutexPend(&g_led_mutex, 0, OS_OPT_PEND_BLOCKING, NULL, &err);
-        my_assert(OS_ERR_NONE == err);
-      
-        BSP_LED_Toggle(LED2);
-        
-        OSMutexPost(&g_led_mutex,OS_OPT_POST_NONE, &err);
-        my_assert(OS_ERR_NONE == err);
-        
-        // TODO: Sleep for 500ms
-        OSTimeDlyHMSM(0, 0, 0, delay, OS_OPT_TIME_HMSM_NON_STRICT, &err);
     }
 }
 
@@ -244,14 +208,6 @@ static void startup_task(void * p_arg)
     OSTaskCreate(&led1_task_TCB, "LED1 Task", (OS_TASK_PTR ) led1_task,
                  0, APP_CFG_LED_TASK_PRIO,
                  &led1_task_Stk[0], (APP_CFG_LED_TASK_STK_SIZE / 10u),
-                  APP_CFG_LED_TASK_STK_SIZE, 0u, 0u, 0,
-                  (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
-    my_assert(OS_ERR_NONE == err);
-    
-    // TODO: Create task to blink LED2
-    OSTaskCreate(&led2_task_TCB, "LED2 Task", (OS_TASK_PTR ) led2_task,
-                 0, APP_CFG_LED_TASK_PRIO,
-                 &led2_task_Stk[0], (APP_CFG_LED_TASK_STK_SIZE / 10u),
                   APP_CFG_LED_TASK_STK_SIZE, 0u, 0u, 0,
                   (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), &err);
     my_assert(OS_ERR_NONE == err);
