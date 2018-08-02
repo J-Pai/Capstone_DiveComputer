@@ -18,7 +18,7 @@
 // *****************************************************************
 void toggle_unit_task(void * p_arg) {
     OS_ERR err;
-   // char p_str[14]; //test string
+    char p_str[14]; //test string
     (void)p_arg;
     for (;;) {
       OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
@@ -26,7 +26,7 @@ void toggle_unit_task(void * p_arg) {
       // get flag about current units
       
       uint32_t flag = (uint32_t)OSFlagPend(&g_unit, UNIT_M | UNIT_FT, 0,
-                          OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
+                          OS_OPT_PEND_FLAG_SET_ANY + OS_OPT_PEND_FLAG_CONSUME, 
                           NULL, &err);
       my_assert(OS_ERR_NONE == err);
       
@@ -34,15 +34,15 @@ void toggle_unit_task(void * p_arg) {
         // Post Flag - Feet
         OSFlagPost(&g_unit, UNIT_FT, OS_OPT_POST_FLAG_SET, &err);
         my_assert(OS_ERR_NONE == err);
-   //     sprintf(p_str, "Unit was M"); //test string
+        sprintf(p_str, "Unit was M"); //test string
       } else {
         // Post Flag - Meters
         OSFlagPost(&g_unit, UNIT_M, OS_OPT_POST_FLAG_SET, &err);
         my_assert(OS_ERR_NONE == err);
-     //   sprintf(p_str, "Unit was FT"); //test string
+        sprintf(p_str, "Unit was FT"); //test string
       }
       // testing!
-     // GUIDEMO_API_writeLine(7u, p_str);
+      GUIDEMO_API_writeLine(7u, p_str);
   }
   
 }
@@ -63,7 +63,7 @@ void add_air_task(void * p_arg) {
       //GUIDEMO_API_writeLine(7u, p_str);
       // only add if at surface
       uint32_t flag = (uint32_t)OSFlagPend(&g_surface, AT_SURFACE, 0,
-                         OS_OPT_PEND_BLOCKING | OS_OPT_PEND_FLAG_SET_ANY | OS_OPT_PEND_FLAG_CONSUME, 
+                         OS_OPT_PEND_FLAG_SET_ANY + OS_OPT_PEND_FLAG_CONSUME, 
                           NULL, &err);
       my_assert(OS_ERR_NONE == err);
       
